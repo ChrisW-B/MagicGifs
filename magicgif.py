@@ -208,7 +208,7 @@ class MagicGifsListener(tweepy.StreamListener):
                         return num
         return -1
 
-logging.basicConfig(level=logging.DEBUG, filename="log.txt", filemode="a+",
+logging.basicConfig(level=logging.INFO, filename="log.txt", filemode="a+",
                     format="%(asctime)-15s %(levelname)-8s %(message)s")
 magicgif = MagicGif()
 magicgif.setup_threads()
