@@ -11,6 +11,7 @@ import time
 import threading
 import random
 import os
+import logging
 
 reload(sys)
 #twitter doesn't get along with ascii
@@ -51,7 +52,7 @@ class MagicGif(object):
         teamfollowback!
         """
         while True:
-            print("starting follow")
+            logging.info("starting follow")
             for follower in self.limit_handled(
                     tweepy.Cursor(self.api.followers).items()):
                 # don't repeatedly follow, and maybe keep out the spammers
@@ -61,7 +62,7 @@ class MagicGif(object):
                         follower.friends_count < 200
                         )):
                     follower.follow()
-                    print("following " + follower.screen_name)
+                    logging.info("following " + follower.screen_name)
             time.sleep(15*60)
 
     def user_listener(self):
@@ -71,19 +72,19 @@ class MagicGif(object):
         while True:
             try:
                 # For accounts bot is following
-                print("starting user")
+                logging.info("starting user")
                 magicGifsListener = MagicGifsListener(self.api)
                 magicGifsStream = tweepy.Stream(
                     auth=self.api.auth,
                     listener=magicGifsListener)
                 magicGifsStream.userstream(async=False)
             except Exception as e:
-                print(e)
+                logging.error(e)
                 continue
 
     def setup_threads(self):
         # set up streams
-        print("starting threads")
+        logging.info("starting threads")
         self.api.update_status("@ChrisW_B I'm ready!")
         stream = threading.Thread(target=self.user_listener)
         follow = threading.Thread(target=self.follow_back)
@@ -97,9 +98,9 @@ class MagicGifsListener(tweepy.StreamListener):
         self.api = api
 
     def on_status(self, status):
-        print("Got tweet: \n{}".format(status.text))
+        logging.info("Got tweet: \n{}".format(status.text))
         if(self.ok_to_tweet()):
-            print(status.text)
+            logging.info("Replying")
             picLoc = self.get_image(status.text)
             if picLoc is None:
                 return
@@ -111,7 +112,7 @@ class MagicGifsListener(tweepy.StreamListener):
                 media_ids=[mediaId])
 
     def on_error(self, status_code):
-        print(status_code)
+        logging.error(status_code)
 
     def get_image(self, tweet):
         """
@@ -167,16 +168,16 @@ class MagicGifsListener(tweepy.StreamListener):
         num = self.rand_num()
         if (num > 80):
             return True
-        print("Not high enough")
+        logging.info("Not high enough")
         return False
 
     def get_media_id(self, picLoc):
         """
         upload photo to twitter and return media id for attachment
         """
-        print("uploading")
+        logging.info("uploading")
         uploadData = self.api.media_upload(picLoc)
-        print("got mediaid")
+        logging.info("got mediaid")
         return uploadData.media_id_string
 
     def get_giphy(self, word):
@@ -207,7 +208,8 @@ class MagicGifsListener(tweepy.StreamListener):
                         return num
         return -1
 
-
+logging.basicConfig(level=logging.DEBUG, filename="log.txt", filemode="a+",
+                    format="%(asctime)-15s %(levelname)-8s %(message)s")
 magicgif = MagicGif()
 magicgif.setup_threads()
 
