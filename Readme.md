@@ -6,9 +6,8 @@ Just a simple Tweepy based bot that replies to people it follows with relevant g
 
 Make sure to install Tweepy and Giphypop before running!
 
-```python
-pip install tweepy
-pip install requests giphypop
+```sh
+pip install tweepy requests giphypop
 ```
 
 After that, its as simple as setting up a config.py file like so
