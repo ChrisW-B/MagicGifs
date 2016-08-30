@@ -1,11 +1,14 @@
-#Twitter Haiku Bot
+#Twitter Magic Gifs Bot
 
-Just a simple Tweepy based bot that looks for haikus that people it follows tweet
+Just a simple Tweepy based bot that replies to people it follows with relevant gifs from Giphy
 
-Make sure to install Tweepy before running!
+"Inspired" by boredom and the old @MagicPics bot
+
+Make sure to install Tweepy and Giphypop before running!
 
 ```python
 pip install tweepy
+pip install requests giphypop
 ```
 
 After that, its as simple as setting up a config.py file like so
@@ -16,10 +19,4 @@ access_token = "XXXXXXXX-XXXXXXXX"
 access_token_secret = "XXXXXXXX"
 ```
 
-and then running `python haikulistener.py`
-
-Syllable information comes from
-http://www.gutenberg.org/ebooks/3204
-
-Syllable guessing comes from 
-http://stackoverflow.com/questions/14541303/count-the-number-of-syllables-in-a-word
+and then running `python magicgif.py`
