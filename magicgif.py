@@ -97,6 +97,7 @@ class MagicGifsListener(tweepy.StreamListener):
         self.api = api
 
     def on_status(self, status):
+        print("Got tweet: \n{}".format(status.text))
         if(self.ok_to_tweet()):
             print(status.text)
             picLoc = self.get_image(status.text)
@@ -166,6 +167,7 @@ class MagicGifsListener(tweepy.StreamListener):
         num = self.rand_num()
         if (num > 80):
             return True
+        print("Not high enough")
         return False
 
     def get_media_id(self, picLoc):
