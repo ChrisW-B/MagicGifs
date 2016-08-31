@@ -96,19 +96,21 @@ class MagicGifsListener(tweepy.StreamListener):
 
     def __init__(self, api):
         self.api = api
+        self.botHandle = "@magicgifbot"
 
-    def on_status(self, status):
-        logging.info("Got tweet: \n{}".format(status.text))
-        if(self.ok_to_tweet()):
+    def on_status(self, tweet):
+        logging.info("Got tweet: \n{}".format(tweet.text))
+        if(self.ok_to_tweet(tweet.text)):
             logging.info("Replying")
-            picLoc = self.get_image(status.text)
+            picLoc = self.get_image(tweet.text)
             if picLoc is None:
                 return
             mediaId = self.get_media_id(picLoc)
             self.delete_file(picLoc)
+            otherHandles = self.extract_handles(tweet.text)
             self.api.update_status(
-                "@" + status.author.screen_name,
-                in_reply_to_status_id=status.id,
+                "@{} {}".format(tweet.author.screen_name, otherHandles),
+                in_reply_to_status_id=tweet.id,
                 media_ids=[mediaId])
 
     def on_error(self, status_code):
@@ -161,12 +163,22 @@ class MagicGifsListener(tweepy.StreamListener):
         random.seed()
         return random.random() * 100.00
 
-    def ok_to_tweet(self):
+    def extract_handles(self, tweet):
+        handleArray = re.findall(r"@\S+", tweet)
+        handleString = ""
+        for handle in handleArray:
+            if self.botHandle in handle:
+                continue
+            else:
+                handleString += handle + " "
+        return handleString
+
+    def ok_to_tweet(self, tweet):
         """
         Generate Random Number and determine if we should tweet
         """
         num = self.rand_num()
-        if (num > 80):
+        if ((num > 80) or (self.botHandle in tweet)):
             return True
         logging.info("Not high enough")
         return False
