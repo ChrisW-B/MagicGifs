@@ -96,7 +96,7 @@ class MagicGifsListener(tweepy.StreamListener):
 
     def __init__(self, api):
         self.api = api
-        self.botHandle = "@magicgifbot"
+        self.botHandle = "@magicgifsbot"
 
     def on_status(self, tweet):
         logging.info("Got tweet: \n{}".format(tweet.text))
@@ -167,7 +167,7 @@ class MagicGifsListener(tweepy.StreamListener):
         handleArray = re.findall(r"@\S+", tweet)
         handleString = ""
         for handle in handleArray:
-            if self.botHandle in handle:
+            if self.botHandle in handle.lower():
                 continue
             else:
                 handleString += handle + " "
@@ -178,7 +178,7 @@ class MagicGifsListener(tweepy.StreamListener):
         Generate Random Number and determine if we should tweet
         """
         num = self.rand_num()
-        if ((num > 80) or (self.botHandle in tweet)):
+        if ((num > 80) or (self.botHandle in tweet.lower())):
             return True
         logging.info("Not high enough")
         return False
