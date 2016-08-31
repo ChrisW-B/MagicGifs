@@ -196,8 +196,10 @@ class MagicGifsListener(tweepy.StreamListener):
         """
         gets a gif from giphy
         """
-        giphyLoc = translate(word).fixed_height.url
-        return self.downloadFile(giphyLoc)
+        giphyLoc = translate(word)
+        if giphyLoc is not None:
+            return self.downloadFile(giphyLoc.fixed_height.url)
+        return None
 
     def downloadFile(self, url):
         filename = "giphy.gif"
