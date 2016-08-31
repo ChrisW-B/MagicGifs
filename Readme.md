@@ -2,7 +2,7 @@
 
 Just a simple Tweepy based bot that replies to people it follows with relevant gifs from Giphy
 
-"Inspired" by boredom and the old @MagicPics bot
+"Inspired" by boredom and the old @MagicPixx bot
 
 Make sure to install Tweepy and Giphypop before running!
 
