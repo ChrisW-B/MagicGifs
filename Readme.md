@@ -19,3 +19,7 @@ access_token_secret = "XXXXXXXX"
 ```
 
 and then running `python magicgif.py`
+
+
+Things I might try to add
+- NLP for more exact terms: search giphy for increasingly shorter phrases
