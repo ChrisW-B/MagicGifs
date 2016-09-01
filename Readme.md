@@ -4,10 +4,11 @@ Just a simple Tweepy based bot that replies to people it follows with relevant g
 
 "Inspired" by boredom and the old @MagicPixx bot
 
-Make sure to install Tweepy and my updated version of Giphypop before running!
+Make sure to install Tweepy, TextBlob and my updated version of Giphypop before running!
 
 ```sh
-pip install tweepy requests git+git://github.com/ChrisW-B/giphypop 
+pip install tweepy textblob requests git+git://github.com/ChrisW-B/giphypop 
+python -m textblob.download_corpora
 ```
 
 After that, its as simple as setting up a config.py file like so
@@ -22,4 +23,4 @@ and then running `python magicgif.py`
 
 
 Things I might try to add
-- NLP for more exact terms: search giphy for increasingly shorter phrases
+- Improving NLP to search for key phrases instead of just nouns/verbs

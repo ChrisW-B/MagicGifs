@@ -12,6 +12,7 @@ import threading
 import random
 import os
 import logging
+from textblob import TextBlob
 
 reload(sys)
 #twitter doesn't get along with ascii
@@ -106,8 +107,8 @@ class MagicGifsListener(tweepy.StreamListener):
                 if self.botHandle in tweet.text.lower():
                     otherHandles = self.extract_handles(tweet.text)
                     self.api.update_status(
-                        "@{} {}Sorry, I couldn't find anything for that".format(
-                            tweet.author.screen_name, otherHandles),
+                        "@{} {}Sorry, I couldn't find anything for that"
+                        .format(tweet.author.screen_name, otherHandles),
                         in_reply_to_status_id=tweet.id)
                 return
             mediaId = self.get_media_id(picLoc)
@@ -136,18 +137,18 @@ class MagicGifsListener(tweepy.StreamListener):
         select a single word to search
         """
         tweetArray = self.clean_tweet(tweet)
-        optionsArray = []
-        for word in tweetArray:
-            if len(word) > 3:
-                optionsArray.append([word, self.rand_num()])
-        if len(optionsArray) == 0:
+        cleanTweet = " ".join(str(word) for word in tweetArray)
+        if len(cleanTweet) == 0:
             return None
-        wordLoc = 0
-        maxVal = optionsArray[0][1]
-        for i in range(1, len(optionsArray)):
-            if optionsArray[i][1] > maxVal:
-                wordLoc = i
-        return optionsArray[wordLoc][0]
+        blob = TextBlob(cleanTweet)
+        posTags = blob.tags
+        is_vb = lambda pos: pos[:2] == 'VB'
+        is_noun = lambda pos: pos[:2] == 'NN'
+        posWords = [word for (word, pos) in posTags
+                    if (is_vb(pos) or is_noun(pos)) and len(word) > 3]
+        if len(posWords) > 0:
+            return posWords[int(self.rand_num(0, len(posWords)))]
+        return None
 
     def clean_tweet(self, tweet):
         """
@@ -161,12 +162,12 @@ class MagicGifsListener(tweepy.StreamListener):
         stripRTs = stripAbbrev.replace("RT", "")
         return re.findall(r"[\w']+", stripRTs)
 
-    def rand_num(self):
+    def rand_num(self, min=0.0, max=100.0):
         """
         generate a random number between 0 and 100
         """
         random.seed()
-        return random.random() * 100.00
+        return random.uniform(min, max)
 
     def extract_handles(self, tweet):
         handleArray = re.findall(r"@\S+", tweet)
