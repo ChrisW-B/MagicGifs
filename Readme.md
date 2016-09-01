@@ -4,10 +4,10 @@ Just a simple Tweepy based bot that replies to people it follows with relevant g
 
 "Inspired" by boredom and the old @MagicPixx bot
 
-Make sure to install Tweepy and Giphypop before running!
+Make sure to install Tweepy and my updated version of Giphypop before running!
 
 ```sh
-pip install tweepy requests giphypop
+pip install tweepy requests git+git://github.com/ChrisW-B/giphypop 
 ```
 
 After that, its as simple as setting up a config.py file like so
