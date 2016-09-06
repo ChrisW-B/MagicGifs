@@ -122,10 +122,13 @@ class MagicGifsListener(tweepy.StreamListener):
         """
         selects an image to reply with
         """
-        word = self.select_word(tweet)
-        if word is None:
-            return None
-        filename = self.get_giphy(word)
+        tweet = self.clean_tweet(tweet)
+        filename = self.get_giphy(tweet)
+        if filename is None:
+            word = self.select_word(tweet)
+            if word is None:
+                return None
+            filename = self.get_giphy(word)
         return filename
 
     def select_word(self, tweet):
@@ -183,9 +186,11 @@ class MagicGifsListener(tweepy.StreamListener):
         """
         Generate Random Number and determine if we should tweet
         """
+        if 'rt ' + self.botHandle in tweet.lower():
+            logging.warning("Retweet of bot")
+            return False
         num = self.rand_num()
-        if ((num > 80) or (self.botHandle in tweet.lower()
-           and 'rt' not in tweet.lower())):
+        if num > 80 or self.botHandle in tweet.lower():
             return True
         logging.warning("Not high enough")
         return False
@@ -198,11 +203,11 @@ class MagicGifsListener(tweepy.StreamListener):
         uploadData = self.api.media_upload(picLoc)
         return uploadData.media_id_string
 
-    def get_giphy(self, word):
+    def get_giphy(self, text):
         """
         gets a gif from giphy
         """
-        giphyLoc = translate(word, rating='pg-13')
+        giphyLoc = translate(phrase=text, rating='pg-13')
         if giphyLoc is not None:
             return self.download_file(giphyLoc.downsized.url)
         return None
