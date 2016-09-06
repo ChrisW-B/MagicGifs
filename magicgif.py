@@ -81,7 +81,7 @@ class MagicGif(object):
     def setup_threads(self):
         # set up streams
         logging.warning("starting threads")
-        # self.api.update_status("@ChrisW_B I'm ready!")
+        self.api.update_status("@ChrisW_B I'm ready!")
         stream = threading.Thread(target=self.user_listener)
         follow = threading.Thread(target=self.follow_back)
         stream.start()
