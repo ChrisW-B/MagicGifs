@@ -81,7 +81,7 @@ class MagicGif(object):
     def setup_threads(self):
         # set up streams
         logging.warning("starting threads")
-        self.api.update_status("@ChrisW_B I'm ready!")
+        # self.api.update_status("@ChrisW_B I'm ready!")
         stream = threading.Thread(target=self.user_listener)
         follow = threading.Thread(target=self.follow_back)
         stream.start()
@@ -96,7 +96,7 @@ class MagicGifsListener(tweepy.StreamListener):
 
     def on_status(self, tweet):
         logging.warning("Got tweet: {}".format(tweet.text))
-        if(self.ok_to_tweet(tweet.text)):
+        if(self.ok_to_tweet(tweet)):
             logging.warning("Replying")
             picLoc = self.get_image(tweet.text)
             if picLoc is None:
@@ -131,12 +131,10 @@ class MagicGifsListener(tweepy.StreamListener):
             filename = self.get_giphy(word)
         return filename
 
-    def select_word(self, tweet):
+    def select_word(self, cleanTweet):
         """
         select a single word to search
         """
-        tweetArray = self.clean_tweet(tweet)
-        cleanTweet = " ".join(str(word) for word in tweetArray)
         if len(cleanTweet) == 0:
             return None
         blob = TextBlob(cleanTweet)
@@ -163,7 +161,7 @@ class MagicGifsListener(tweepy.StreamListener):
         stripNums = re.sub(r'\w*\d\w*', '', stripTags).strip()
         stripAbbrev = re.sub(r"(([A-Z])\.)", '', stripNums)
         stripRTs = stripAbbrev.replace("RT", "")
-        return re.findall(r"[\w']+", stripRTs)
+        return stripRTs
 
     def rand_num(self, min=0.0, max=100.0):
         """
@@ -186,11 +184,11 @@ class MagicGifsListener(tweepy.StreamListener):
         """
         Generate Random Number and determine if we should tweet
         """
-        if 'rt ' + self.botHandle in tweet.lower():
-            logging.warning("Retweet of bot")
+        if str(tweet.author.screen_name).lower() in self.botHandle:
+            logging.warning("Bot tweet!")
             return False
         num = self.rand_num()
-        if num > 80 or self.botHandle in tweet.lower():
+        if num > 80 or self.botHandle in tweet.text.lower():
             return True
         logging.warning("Not high enough")
         return False
