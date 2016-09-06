@@ -125,6 +125,7 @@ class MagicGifsListener(tweepy.StreamListener):
         tweet = self.clean_tweet(tweet)
         filename = self.get_giphy(tweet)
         if filename is None:
+            logging.warning("Nothing from the full tweet, picking a word")
             word = self.select_word(tweet)
             if word is None:
                 return None
@@ -207,6 +208,7 @@ class MagicGifsListener(tweepy.StreamListener):
         """
         giphyLoc = translate(phrase=text, rating='pg-13')
         if giphyLoc is not None:
+            logging.warning("Search for " + text + "returned " + giphyLoc.url)
             return self.download_file(giphyLoc.downsized.url)
         return None
 
