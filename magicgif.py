@@ -13,14 +13,10 @@ import random
 import os
 import logging
 from textblob import TextBlob
-
-reload(sys)
-#twitter doesn't get along with ascii
-sys.setdefaultencoding('utf8')
+from wordfilter import Wordfilter
 
 
 class MagicGif(object):
-    """docstring for MagicGif"""
 
     def __init__(self):
         super(MagicGif, self).__init__()
@@ -147,7 +143,11 @@ class MagicGifsListener(tweepy.StreamListener):
         posWords = [word for (word, pos) in posTags
                     if (is_vb(pos) or is_noun(pos)) and len(word) > 3]
         if len(posWords) > 0:
-            return posWords[int(self.rand_num(0, len(posWords)))]
+            word = posWords[int(self.rand_num(0, len(posWords)))]
+            while(wordfilter.blacklisted(word)):
+                posWords.remove(word)
+                word = posWords[int(self.rand_num(0, len(posWords)))]
+            return word
         return None
 
     def clean_tweet(self, tweet):
@@ -184,7 +184,8 @@ class MagicGifsListener(tweepy.StreamListener):
         Generate Random Number and determine if we should tweet
         """
         num = self.rand_num()
-        if ((num > 80) or (self.botHandle in tweet.lower())):
+        if ((num > 80) or (self.botHandle in tweet.lower()
+           and 'rt' not in tweet.lower())):
             return True
         logging.warning("Not high enough")
         return False
@@ -201,7 +202,7 @@ class MagicGifsListener(tweepy.StreamListener):
         """
         gets a gif from giphy
         """
-        giphyLoc = translate(word)
+        giphyLoc = translate(word, rating='pg-13')
         if giphyLoc is not None:
             return self.download_file(giphyLoc.downsized.url)
         return None
@@ -227,9 +228,15 @@ class MagicGifsListener(tweepy.StreamListener):
                         return num
         return -1
 
+reload(sys)
+#twitter doesn't get along with ascii
+sys.setdefaultencoding('utf8')
+
 logging.basicConfig(level=logging.WARNING, filename="log.txt", filemode="a+",
                     format="%(asctime)-15s %(levelname)-8s %(message)s")
 magicgif = MagicGif()
+wordfilter = Wordfilter()
+wordfilter.add_words(config.badwords)
 magicgif.setup_threads()
 
 while True:

@@ -1,0 +1,5 @@
+tweepy
+textblob
+wordfilter
+requests
+git+git://github.com/ChrisW-B/giphypop
