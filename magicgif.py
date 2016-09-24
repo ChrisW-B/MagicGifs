@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 
-from imp import reload
-from giphypop import translate
 import urllib
-import tweepy
-import config
 import re
 import sys
 import time
@@ -12,8 +8,11 @@ import threading
 import random
 import os
 import logging
+import config
+import tweepy
 from textblob import TextBlob
 from wordfilter import Wordfilter
+from giphypop import translate
 
 
 class MagicGif(object):
@@ -45,9 +44,7 @@ class MagicGif(object):
         return friendship[0].following
 
     def follow_back(self):
-        """
-        teamfollowback!
-        """
+        #teamfollowback!
         while True:
             for follower in self.limit_handled(
                     tweepy.Cursor(self.api.followers).items()):
@@ -79,7 +76,9 @@ class MagicGif(object):
                 continue
 
     def setup_threads(self):
-        # set up streams
+        """ 
+        set up streams
+        """
         logging.warning("starting threads")
         self.api.update_status("@ChrisW_B I'm ready!")
         stream = threading.Thread(target=self.user_listener)
@@ -96,24 +95,24 @@ class MagicGifsListener(tweepy.StreamListener):
 
     def on_status(self, tweet):
         logging.warning("Got tweet: {}".format(tweet.text))
-        if(self.ok_to_tweet(tweet)):
+        if self.ok_to_tweet(tweet):
             logging.warning("Replying")
-            picLoc = self.get_image(tweet.text)
-            if picLoc is None:
+            pic_loc = self.get_image(tweet.text)
+            if pic_loc is None:
                 if self.botHandle in tweet.text.lower():
-                    otherHandles = self.extract_handles(tweet.text)
+                    other_handles = self.extract_handles(tweet.text)
                     self.api.update_status(
                         "@{} {}Sorry, I couldn't find anything for that"
-                        .format(tweet.author.screen_name, otherHandles),
+                        .format(tweet.author.screen_name, other_handles),
                         in_reply_to_status_id=tweet.id)
                 return
-            mediaId = self.get_media_id(picLoc)
-            self.delete_file(picLoc)
-            otherHandles = self.extract_handles(tweet.text)
+            media_id = self.get_media_id(pic_loc)
+            self.delete_file(pic_loc)
+            other_handles = self.extract_handles(tweet.text)
             self.api.update_status(
-                "@{} {}".format(tweet.author.screen_name, otherHandles),
+                "@{} {}".format(tweet.author.screen_name, other_handles),
                 in_reply_to_status_id=tweet.id,
-                media_ids=[mediaId])
+                media_ids=[media_id])
 
     def on_error(self, status_code):
         logging.error(status_code)
@@ -189,7 +188,7 @@ class MagicGifsListener(tweepy.StreamListener):
             logging.warning("Bot tweet!")
             return False
         num = self.rand_num()
-        if num > 80 or self.botHandle in tweet.text.lower():
+        if num > 95 or self.botHandle in tweet.text.lower():
             return True
         logging.warning("Not high enough")
         return False
@@ -208,7 +207,7 @@ class MagicGifsListener(tweepy.StreamListener):
         """
         giphyLoc = translate(phrase=text, rating='pg-13')
         if giphyLoc is not None:
-            logging.warning("Search for " + text + "returned " + giphyLoc.url)
+            logging.warning("Search for " + text + " returned " + giphyLoc.url)
             return self.download_file(giphyLoc.downsized.url)
         return None
 
@@ -226,7 +225,7 @@ class MagicGifsListener(tweepy.StreamListener):
         searches for word in dictionary file
         """
         word = word.lower()
-        with open(self.wordlist) as myFile:
+        with open(self.api.wordlist) as myFile:
             for num, line in enumerate(myFile):
                 if word in line:
                     if word == line.lower():
