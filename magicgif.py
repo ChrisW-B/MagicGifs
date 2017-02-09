@@ -84,7 +84,7 @@ class MagicGif(object):
         """
         logging.info("starting threads")
         posted = false
-        while (!posted)
+        while not posted:
             try:
                 self.api.update_status("@ChrisW_B I'm ready!")
                 posted = true
