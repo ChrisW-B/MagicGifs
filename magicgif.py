@@ -83,7 +83,7 @@ class MagicGif(object):
         set up streams
         """
         logging.info("starting threads")
-        posted = false
+        posted = False
         while not posted:
             try:
                 self.api.update_status("@ChrisW_B I'm ready!")
