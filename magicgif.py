@@ -27,7 +27,6 @@ class MagicGif(object):
             config.access_token,
             config.access_token_secret)
         self.api = tweepy.API(self.auth)
-        self.wordlist = "wordlist.txt"
 
     def limit_handled(self, cursor):
         """
@@ -188,7 +187,7 @@ class MagicGifsListener(tweepy.StreamListener):
             logging.warning("Bot tweet!")
             return False
         num = self.rand_num()
-        if num > 95 or self.botHandle in tweet.text.lower():
+        if num > 98 or self.botHandle in tweet.text.lower():
             return True
         logging.warning("Not high enough")
         return False
@@ -219,18 +218,6 @@ class MagicGifsListener(tweepy.StreamListener):
 
     def delete_file(self, loc):
         os.remove(loc)
-
-    def find_word(self, word):
-        """
-        searches for word in dictionary file
-        """
-        word = word.lower()
-        with open(self.api.wordlist) as myFile:
-            for num, line in enumerate(myFile):
-                if word in line:
-                    if word == line.lower():
-                        return num
-        return -1
 
 reload(sys)
 #twitter doesn't get along with ascii
