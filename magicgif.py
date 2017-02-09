@@ -223,6 +223,8 @@ reload(sys)
 #twitter doesn't get along with ascii
 sys.setdefaultencoding('utf8')
 
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
 logging.basicConfig(level=logging.WARNING, filename="log.txt", filemode="a+",
                     format="%(asctime)-15s %(levelname)-8s %(message)s")
 formatter = logging.Formatter('%(asctime)s : %(levelname)s : %(message)s')
