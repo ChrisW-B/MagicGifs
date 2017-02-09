@@ -87,7 +87,7 @@ class MagicGif(object):
         while not posted:
             try:
                 self.api.update_status("@ChrisW_B I'm ready!")
-                posted = true
+                posted = True
             except:
                 logging.warning("Looks like its a duplicate update")
                 time.sleep(30)
