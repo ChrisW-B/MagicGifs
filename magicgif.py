@@ -53,8 +53,12 @@ class MagicGif(object):
                         follower.friends_count/follower.followers_count < 3 or
                         follower.friends_count < 200
                         )):
-                    follower.follow()
-                    logging.warning("following " + follower.screen_name)
+                    try:
+                        follower.follow()
+                        logging.info("following " + follower.screen_name)
+                    except Exception as e:
+                        logging.warning("Couldn't follow " + follower.screen_name+ " continuing")
+                        pass      
             time.sleep(15*60)
 
     def user_listener(self):
@@ -64,7 +68,7 @@ class MagicGif(object):
         while True:
             try:
                 # For accounts bot is following
-                logging.warning("starting user")
+                logging.info("starting user")
                 magicGifsListener = MagicGifsListener(self.api)
                 magicGifsStream = tweepy.Stream(
                     auth=self.api.auth,
@@ -78,8 +82,16 @@ class MagicGif(object):
         """ 
         set up streams
         """
-        logging.warning("starting threads")
-        self.api.update_status("@ChrisW_B I'm ready!")
+        logging.info("starting threads")
+        posted = false
+        while (!posted)
+            try:
+                self.api.update_status("@ChrisW_B I'm ready!")
+                posted = true
+            except:
+                logging.warning("Looks like its a duplicate update")
+                sleep(30)
+                continue
         stream = threading.Thread(target=self.user_listener)
         follow = threading.Thread(target=self.follow_back)
         stream.start()
@@ -93,9 +105,9 @@ class MagicGifsListener(tweepy.StreamListener):
         self.botHandle = "@magicgifsbot"
 
     def on_status(self, tweet):
-        logging.warning("Got tweet: {}".format(tweet.text))
+        logging.info("Got tweet: {}".format(tweet.text))
         if self.ok_to_tweet(tweet):
-            logging.warning("Replying")
+            logging.info("Replying")
             pic_loc = self.get_image(tweet.text)
             if pic_loc is None:
                 if self.botHandle in tweet.text.lower():
@@ -206,7 +218,7 @@ class MagicGifsListener(tweepy.StreamListener):
         """
         giphyLoc = translate(phrase=text, rating='pg-13')
         if giphyLoc is not None:
-            logging.warning("Search for " + text + " returned " + giphyLoc.url)
+            logging.info("Search for " + text + " returned " + giphyLoc.url)
             return self.download_file(giphyLoc.downsized.url)
         return None
 
@@ -225,7 +237,7 @@ sys.setdefaultencoding('utf8')
 
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)
-logging.basicConfig(level=logging.WARNING, filename="log.txt", filemode="a+",
+logging.basicConfig(level=logging.INFO, filename="log.txt", filemode="a+",
                     format="%(asctime)-15s %(levelname)-8s %(message)s")
 formatter = logging.Formatter('%(asctime)s : %(levelname)s : %(message)s')
 console.setFormatter(formatter)
