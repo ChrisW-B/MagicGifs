@@ -90,7 +90,7 @@ class MagicGif(object):
                 posted = true
             except:
                 logging.warning("Looks like its a duplicate update")
-                sleep(30)
+                time.sleep(30)
                 continue
         stream = threading.Thread(target=self.user_listener)
         follow = threading.Thread(target=self.follow_back)
