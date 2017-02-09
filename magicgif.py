@@ -225,6 +225,9 @@ sys.setdefaultencoding('utf8')
 
 logging.basicConfig(level=logging.WARNING, filename="log.txt", filemode="a+",
                     format="%(asctime)-15s %(levelname)-8s %(message)s")
+formatter = logging.Formatter('%(asctime)s : %(levelname)s : %(message)s')
+console.setFormatter(formatter)
+logging.getLogger("").addHandler(console)
 magicgif = MagicGif()
 wordfilter = Wordfilter()
 wordfilter.add_words(config.badwords)
