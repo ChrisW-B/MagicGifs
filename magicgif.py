@@ -58,7 +58,7 @@ class MagicGif(object):
                         logging.info("following " + follower.screen_name)
                     except Exception as e:
                         logging.warning("Couldn't follow " + follower.screen_name+ " continuing")
-                        pass      
+                        pass
             time.sleep(15*60)
 
     def user_listener(self):
@@ -79,7 +79,7 @@ class MagicGif(object):
                 continue
 
     def setup_threads(self):
-        """ 
+        """
         set up streams
         """
         logging.info("starting threads")
@@ -237,10 +237,9 @@ sys.setdefaultencoding('utf8')
 
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)
-logging.basicConfig(level=logging.INFO, filename="log.txt", filemode="a+",
+logging.basicConfig(level=logging.INFO,
                     format="%(asctime)-15s %(levelname)-8s %(message)s")
-formatter = logging.Formatter('%(asctime)s : %(levelname)s : %(message)s')
-console.setFormatter(formatter)
+console.setFormatter(logging.Formatter('%(asctime)s : %(levelname)s : %(message)s'))
 logging.getLogger("").addHandler(console)
 magicgif = MagicGif()
 wordfilter = Wordfilter()
