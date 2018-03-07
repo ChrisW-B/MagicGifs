@@ -223,7 +223,7 @@ class MagicGifsListener(tweepy.StreamListener):
         """
         gets a gif from giphy
         """
-        giphyLoc = translate(phrase=text, rating='pg-13')
+        giphyLoc = translate(phrase=text, rating='pg-13', api_key='D1xSdAwbZ0rr3EZSN9SPb6MkfymFd1Ko')
         if giphyLoc is not None:
             logging.info("Search for " + text + " returned " + giphyLoc.url)
             return self.download_file(giphyLoc.downsized.url)
