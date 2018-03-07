@@ -110,7 +110,7 @@ class MagicGifsListener(tweepy.StreamListener):
         logging.info("Got tweet: {}".format(tweet.text))
         if self.ok_to_tweet(tweet):
             sleep_time = self.rand_num(1,12);
-            logging.info("Waiting {} seconds to reply").format(sleep_time)
+            logging.info("Waiting {} seconds to reply".format(sleep_time))
             time.sleep(sleep_time) # wait a bit
             logging.info("Replying")
             pic_loc = self.get_image(tweet.text)
