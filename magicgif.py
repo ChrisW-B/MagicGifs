@@ -112,10 +112,9 @@ class MagicGifsListener(tweepy.StreamListener):
             pic_loc = self.get_image(tweet.text)
             if pic_loc is None:
                 if self.botHandle in tweet.text.lower():
-                    other_handles = self.extract_handles(tweet.text)
                     self.api.update_status(
                         "@{} {}Sorry, I couldn't find anything for that"
-                        .format(tweet.author.screen_name, other_handles),
+                        .format(tweet.author.screen_name),
                         in_reply_to_status_id=tweet.id)
                 return
             media_id = self.get_media_id(pic_loc)
@@ -198,6 +197,9 @@ class MagicGifsListener(tweepy.StreamListener):
         """
         if str(tweet.author.screen_name).lower() in self.botHandle:
             logging.warning("Bot tweet!")
+            return False
+        if "rt @" in tweet.text.lower():
+            logging.warning("Retweet!")
             return False
         num = self.rand_num()
         if num > 98 or self.botHandle in tweet.text.lower():
