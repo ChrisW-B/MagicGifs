@@ -87,7 +87,7 @@ class MagicGif(object):
         posted = False
         while not posted:
             try:
-                self.api.update_status("@ChrisW_B it's " + datetime.now().strftime('%H:%M:%S') + " and I'm ready!")
+                self.api.update_status("@ChrisW_B it's {} and I'm ready!".format(datetime.now().strftime('%H:%M:%S')))
                 posted = True
             except:
                 logging.warning("Looks like its a duplicate update")
@@ -108,6 +108,9 @@ class MagicGifsListener(tweepy.StreamListener):
     def on_status(self, tweet):
         logging.info("Got tweet: {}".format(tweet.text))
         if self.ok_to_tweet(tweet):
+            sleep_time = self.rand_num(1,12);
+             logging.info("Waiting {} seconds to reply").format(sleep_time)
+            sleep(sleep_time) # wait a bit
             logging.info("Replying")
             pic_loc = self.get_image(tweet.text)
             if pic_loc is None:
