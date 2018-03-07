@@ -50,6 +50,7 @@ class MagicGif(object):
                     tweepy.Cursor(self.api.followers).items()):
                 # don't repeatedly follow, and maybe keep out the spammers
                 if (not self.already_following(follower)
+                    and follower.followers_count > 0
                     and (
                         follower.friends_count/follower.followers_count < 3 or
                         follower.friends_count < 200
@@ -110,7 +111,7 @@ class MagicGifsListener(tweepy.StreamListener):
         if self.ok_to_tweet(tweet):
             sleep_time = self.rand_num(1,12);
             logging.info("Waiting {} seconds to reply").format(sleep_time)
-            sleep(sleep_time) # wait a bit
+            time.sleep(sleep_time) # wait a bit
             logging.info("Replying")
             pic_loc = self.get_image(tweet.text)
             if pic_loc is None:
