@@ -13,6 +13,7 @@ import tweepy
 from textblob import TextBlob
 from wordfilter import Wordfilter
 from giphypop import translate
+from datetime import datetime
 
 
 class MagicGif(object):
@@ -57,7 +58,7 @@ class MagicGif(object):
                         follower.follow()
                         logging.info("following " + follower.screen_name)
                     except Exception as e:
-                        logging.warning("Couldn't follow " + follower.screen_name+ " continuing")
+                        logging.warning("Couldn't follow " + follower.screen_name + " continuing")
                         pass
             time.sleep(15*60)
 
@@ -86,7 +87,7 @@ class MagicGif(object):
         posted = False
         while not posted:
             try:
-                self.api.update_status("@ChrisW_B I'm ready!")
+                self.api.update_status("@ChrisW_B it's " + datetime.now().strftime('%H:%M:%S') + " and I'm ready!")
                 posted = True
             except:
                 logging.warning("Looks like its a duplicate update")
