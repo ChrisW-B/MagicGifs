@@ -8,12 +8,21 @@ import threading
 import random
 import os
 import logging
-import config
+import cfg_load
 import tweepy
 from textblob import TextBlob
 from wordfilter import Wordfilter
 from giphypop import translate
 from datetime import datetime
+
+config = cfg_load.load("./config.yml")
+
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+logging.basicConfig(level=logging.INFO,
+                    format="%(asctime)-15s %(levelname)-8s %(message)s")
+console.setFormatter(logging.Formatter('%(asctime)s : %(levelname)s : %(message)s'))
+logging.getLogger("").addHandler(console)
 
 
 class MagicGif(object):
@@ -22,11 +31,11 @@ class MagicGif(object):
         super(MagicGif, self).__init__()
         #authorize tweepy
         self.auth = tweepy.OAuthHandler(
-            config.consumer_key,
-            config.consumer_secret)
+            config['consumer_key'],
+            config['consumer_secret'])
         self.auth.set_access_token(
-            config.access_token,
-            config.access_token_secret)
+            config['access_token'],
+            config['access_token_secret'])
         self.api = tweepy.API(self.auth)
 
     def limit_handled(self, cursor):
@@ -35,7 +44,7 @@ class MagicGif(object):
         """
         while True:
             try:
-                yield cursor.next()
+                yield next(cursor)
             except tweepy.RateLimitError:
                 time.sleep(15*60)
 
@@ -67,18 +76,19 @@ class MagicGif(object):
         """
         Listens for userstream events
         """
-        while True:
-            try:
-                # For accounts bot is following
-                logging.info("starting user")
-                magicGifsListener = MagicGifsListener(self.api)
-                magicGifsStream = tweepy.Stream(
-                    auth=self.api.auth,
-                    listener=magicGifsListener)
-                magicGifsStream.userstream(async=False)
-            except Exception as e:
-                logging.error(e)
-                continue
+        user = self.api.verify_credentials()
+        try:
+            # For accounts bot is following
+            logging.info("starting user")
+            magicGifsListener = MagicGifsListener(self.api)
+            magicGifsStream = tweepy.Stream(
+                auth=self.api.auth,
+                listener=magicGifsListener)
+            magicGifsStream.filter(is_async=True, follow=[user.id_str])
+        except Exception as e:
+            logging.error(e)
+            return False
+            # continue
 
     def setup_threads(self):
         """
@@ -90,8 +100,9 @@ class MagicGif(object):
             try:
                 self.api.update_status("@ChrisW_B it's {} and I'm ready!".format(datetime.now().strftime('%H:%M:%S')))
                 posted = True
-            except:
+            except Exception as e:
                 logging.warning("Looks like its a duplicate update")
+                logging.error(e)
                 time.sleep(30)
                 continue
         stream = threading.Thread(target=self.user_listener)
@@ -223,7 +234,7 @@ class MagicGifsListener(tweepy.StreamListener):
         """
         gets a gif from giphy
         """
-        giphyLoc = translate(phrase=text, rating='pg-13', api_key=config.giphy_key)
+        giphyLoc = translate(phrase=text, rating='pg-13', api_key=config['giphy_key'])
         if giphyLoc is not None:
             logging.info("Search for " + text + " returned " + giphyLoc.url)
             return self.download_file(giphyLoc.downsized.url)
@@ -231,28 +242,24 @@ class MagicGifsListener(tweepy.StreamListener):
 
     def download_file(self, url):
         filename = "giphy.gif"
-        urllib.urlretrieve(
+        urllib.request.urlretrieve(
             url, filename)
         return filename
 
     def delete_file(self, loc):
         os.remove(loc)
 
-reload(sys)
-#twitter doesn't get along with ascii
-sys.setdefaultencoding('utf8')
 
-console = logging.StreamHandler()
-console.setLevel(logging.INFO)
-logging.basicConfig(level=logging.INFO,
-                    format="%(asctime)-15s %(levelname)-8s %(message)s")
-console.setFormatter(logging.Formatter('%(asctime)s : %(levelname)s : %(message)s'))
-logging.getLogger("").addHandler(console)
-magicgif = MagicGif()
-wordfilter = Wordfilter()
-wordfilter.add_words(config.badwords)
-magicgif.setup_threads()
+def main():
+    print(config)
+    magicgif = MagicGif()
+    wordfilter = Wordfilter()
+    wordfilter.addWords(config['badwords'])
+    magicgif.setup_threads()
 
-while True:
-    #Keep the main thread alive so threads stay up
-    time.sleep(1)
+    while True:
+        #Keep the main thread alive so threads stay up
+        time.sleep(1)
+
+if __name__ == '__main__':
+    main()

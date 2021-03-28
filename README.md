@@ -1,14 +1,14 @@
-#Twitter Magic Gifs Bot
+# Twitter Magic Gifs Bot
 
 Just a simple Tweepy based bot that replies to people it follows with relevant gifs from Giphy
 
 "Inspired" by boredom and the old @MagicPixx bot
 
-Make sure to install Tweepy, TextBlob, Wordfilter and my updated version of Giphypop before running!
-You also need to set up textblob before this can run
+This project uses poetry, so it should be as simple as running `poetry install`
+
+After you've installed the deps, download the most recent corpora by running
 ```sh
-pip install tweepy textblob wordfilter requests git+git://github.com/ChrisW-B/giphypop 
-python -m textblob.download_corpora
+poetry run python -m textblob.download_corpora
 ```
 
 After that, its as simple as setting up a config.py file like so, where badwords are words the bot will not search for
