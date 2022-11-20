@@ -100,9 +100,9 @@ optional = false
 python-versions = ">=3.6,<4.0"
 
 [package.extras]
-pipfile_deprecated_finder = ["pipreqs", "requirementslib"]
-requirements_deprecated_finder = ["pipreqs", "pip-api"]
 colors = ["colorama (>=0.4.3,<0.5.0)"]
+pipfile-deprecated-finder = ["pipreqs", "requirementslib"]
+requirements-deprecated-finder = ["pip-api", "pipreqs"]
 
 [[package]]
 name = "joblib"
@@ -141,12 +141,12 @@ pytz = {version = "*", optional = true, markers = "extra == \"io\""}
 tzlocal = {version = "*", optional = true, markers = "extra == \"io\""}
 
 [package.extras]
-all = ["pandas", "python-magic", "pytz", "pillow", "tzlocal", "boto3", "pytest", "pytest-cov", "pytest-mccabe", "pytest-flake8", "simplejson"]
+all = ["Pillow", "boto3", "pandas", "pytest", "pytest-cov", "pytest-flake8", "pytest-mccabe", "python-magic", "pytz", "simplejson", "tzlocal"]
 aws = ["boto3"]
 datetime = ["pytz"]
-image = ["pillow"]
+image = ["Pillow"]
 io = ["pytz", "tzlocal"]
-tests = ["pytest", "pytest-cov", "pytest-mccabe", "pytest-flake8", "simplejson"]
+tests = ["pytest", "pytest-cov", "pytest-flake8", "pytest-mccabe", "simplejson"]
 
 [[package]]
 name = "nltk"
@@ -163,9 +163,9 @@ regex = "*"
 tqdm = "*"
 
 [package.extras]
-all = ["requests", "numpy", "python-crfsuite", "scikit-learn", "twython", "pyparsing", "scipy", "matplotlib", "gensim"]
+all = ["gensim", "matplotlib", "numpy", "pyparsing", "python-crfsuite", "requests", "scikit-learn", "scipy", "twython"]
 corenlp = ["requests"]
-machine_learning = ["gensim", "numpy", "python-crfsuite", "scikit-learn", "scipy"]
+machine-learning = ["gensim", "numpy", "python-crfsuite", "scikit-learn", "scipy"]
 plot = ["matplotlib"]
 tgrep = ["pyparsing"]
 twitter = ["twython"]
@@ -207,15 +207,7 @@ mccabe = ">=0.6,<0.7"
 toml = ">=0.7.1"
 
 [package.extras]
-docs = ["sphinx (==3.5.1)", "python-docs-theme (==2020.12)"]
-
-[[package]]
-name = "pysocks"
-version = "1.7.1"
-description = "A Python SOCKS client module. See https://github.com/Anorov/PySocks for more information."
-category = "main"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+docs = ["python-docs-theme (==2020.12)", "sphinx (==3.5.1)"]
 
 [[package]]
 name = "pytz"
@@ -253,11 +245,10 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 certifi = ">=2017.4.17"
 chardet = ">=3.0.2,<5"
 idna = ">=2.5,<3"
-PySocks = {version = ">=1.5.6,<1.5.7 || >1.5.7", optional = true, markers = "extra == \"socks\""}
 urllib3 = ">=1.21.1,<1.27"
 
 [package.extras]
-security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
+security = ["cryptography (>=1.3.4)", "pyOpenSSL (>=0.14)"]
 socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 
 [[package]]
@@ -317,20 +308,21 @@ telegram = ["requests"]
 
 [[package]]
 name = "tweepy"
-version = "3.10.0"
+version = "4.4.0"
 description = "Twitter library for Python"
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+python-versions = ">=3.6"
 
 [package.dependencies]
-requests = {version = ">=2.11.1", extras = ["socks"]}
-requests-oauthlib = ">=0.7.0"
-six = ">=1.10.0"
+requests = ">=2.11.1,<3"
+requests-oauthlib = ">=1.0.0,<2"
 
 [package.extras]
-dev = ["coveralls (>=1.8.2)", "tox (>=2.4.0)"]
-test = ["mock (>=1.0.1)", "nose (>=1.3.3)", "vcrpy (>=1.10.3)"]
+async = ["aiohttp (>=3.7.3,<4)", "oauthlib (>=3.1.0,<4)"]
+dev = ["coveralls (>=2.1.0)", "tox (>=3.14.0)"]
+socks = ["requests[socks] (>=2.11.1,<3)"]
+test = ["vcrpy (>=1.10.3)"]
 
 [[package]]
 name = "tzlocal"
@@ -352,9 +344,9 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
 
 [package.extras]
-secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
-socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 brotli = ["brotlipy (>=0.6.0)"]
+secure = ["certifi", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "ipaddress", "pyOpenSSL (>=0.14)"]
+socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "wordfilter"
@@ -375,7 +367,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "55bb248c5da9f3e2f6fb9328dd90604b6eafe2be5aefd69cf7adf9acb11088bd"
+content-hash = "1d4030e78495a563812df04dbf8b526ed3c54fb4a13019a97b8fcb0c6826aeea"
 
 [metadata.files]
 astroid = [
@@ -468,11 +460,6 @@ pylint = [
     {file = "pylint-2.7.2-py3-none-any.whl", hash = "sha256:d09b0b07ba06bcdff463958f53f23df25e740ecd81895f7d2699ec04bbd8dc3b"},
     {file = "pylint-2.7.2.tar.gz", hash = "sha256:0e21d3b80b96740909d77206d741aa3ce0b06b41be375d92e1f3244a274c1f8a"},
 ]
-pysocks = [
-    {file = "PySocks-1.7.1-py27-none-any.whl", hash = "sha256:08e69f092cc6dbe92a0fdd16eeb9b9ffbc13cadfe5ca4c7bd92ffb078b293299"},
-    {file = "PySocks-1.7.1-py3-none-any.whl", hash = "sha256:2725bd0a9925919b9b51739eea5f9e2bae91e83288108a9ad338b2e3a4435ee5"},
-    {file = "PySocks-1.7.1.tar.gz", hash = "sha256:3f8804571ebe159c380ac6de37643bb4685970655d3bba243530d6558b799aa0"},
-]
 pytz = [
     {file = "pytz-2021.1-py2.py3-none-any.whl", hash = "sha256:eb10ce3e7736052ed3623d49975ce333bcd712c7bb19a58b9e2089d4057d0798"},
     {file = "pytz-2021.1.tar.gz", hash = "sha256:83a4a90894bf38e243cf052c8b58f381bfe9a7a483f6a9cab140bc7f702ac4da"},
@@ -558,7 +545,6 @@ requests = [
 requests-oauthlib = [
     {file = "requests-oauthlib-1.3.0.tar.gz", hash = "sha256:b4261601a71fd721a8bd6d7aa1cc1d6a8a93b4a9f5e96626f8e4d91e8beeaa6a"},
     {file = "requests_oauthlib-1.3.0-py2.py3-none-any.whl", hash = "sha256:7f71572defaecd16372f9006f33c2ec8c077c3cfa6f5911a9a90202beb513f3d"},
-    {file = "requests_oauthlib-1.3.0-py3.7.egg", hash = "sha256:fa6c47b933f01060936d87ae9327fead68768b69c6c9ea2109c48be30f2d4dbc"},
 ]
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
@@ -577,8 +563,8 @@ tqdm = [
     {file = "tqdm-4.59.0.tar.gz", hash = "sha256:d666ae29164da3e517fcf125e41d4fe96e5bb375cd87ff9763f6b38b5592fe33"},
 ]
 tweepy = [
-    {file = "tweepy-3.10.0-py2.py3-none-any.whl", hash = "sha256:5e22003441a11f6f4c2ea4d05ec5532f541e9f5d874c3908270f0c28e649b53a"},
-    {file = "tweepy-3.10.0.tar.gz", hash = "sha256:76e6954b806ca470dda877f57db8792fff06a0beba0ed43efc3805771e39f06a"},
+    {file = "tweepy-4.4.0-py2.py3-none-any.whl", hash = "sha256:cf02c4fbbd027fbc7172c24d03f53f061329ac040b22d201e59592a1cff86364"},
+    {file = "tweepy-4.4.0.tar.gz", hash = "sha256:8d4b4520271b796fa7efc4c5d5ef3228af4d79f6a4d3ace3900b2778ed8f6f1c"},
 ]
 tzlocal = [
     {file = "tzlocal-2.1-py2.py3-none-any.whl", hash = "sha256:e2cb6c6b5b604af38597403e9852872d7f534962ae2954c7f35efcb1ccacf4a4"},
