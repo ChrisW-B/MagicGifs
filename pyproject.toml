@@ -10,7 +10,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-tweepy = "^3.10.0"
+tweepy = "^4.0.0"
 textblob = "^0.15.3"
 wordfilter = "^0.2.7"
 requests = "^2.25.1"
